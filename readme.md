@@ -1,11 +1,15 @@
 # A pratt ( or operator precedace) parser for a very basic interpretor
 
 ## Features 
-- Only basic operations like add, subract , multiply , divide
-- Only global variables (take that haters)
-- Very fast garbage collection (Garbage collection done buy OS when process ends only)
+- Only basic operations like add, subract , multiply , divide and storing variables
+- Very fast garbage collection (Garbage collection done buy OS when process ends)
 - Way slower than python (evaluation done in the ast itself)
-- Testing only one on the lexical analyzer so bugs amy be present in the parser
+- Testing only one on the lexical analyzer so bugs may be present in the parser
+- Only global variables (they are overhated)
+- No AI used (AI code would prolly be better quality)
+
+## Suprising details I learned
+- Parsing was way easier when I stoped thinking about the language grammar (may be skill issue)
 
 ## To learn more about pratt parser
 
