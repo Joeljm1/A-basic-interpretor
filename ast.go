@@ -1,6 +1,11 @@
 package main
 
-import "bytes"
+import (
+	"bytes"
+	"fmt"
+)
+
+var variables map[string]float64 = map[string]float64{}
 
 type Node interface {
 	String() string // for debugging
@@ -8,6 +13,7 @@ type Node interface {
 
 type Expression interface {
 	Node
+	Value() float64 // for now doing only float
 }
 
 type IntegerLiteral struct {
@@ -15,11 +21,13 @@ type IntegerLiteral struct {
 	Val int
 }
 
+func (il *IntegerLiteral) Value() float64 {
+	return float64(il.Val)
+}
+
 func (il *IntegerLiteral) String() string {
 	return il.tok.Value
 }
-
-func (il *IntegerLiteral) ExpressionNode() {}
 
 type FloatLiteral struct {
 	tok Token
@@ -29,13 +37,21 @@ type FloatLiteral struct {
 func (fl *FloatLiteral) String() string {
 	return fl.tok.Value
 }
-
-func (fl *FloatLiteral) ExpressionNode() {}
+func (fl *FloatLiteral) Value() float64 {
+	return fl.Val
+}
 
 type PrefixExpression struct {
-	Token    Token // prefix token like ! or -
+	Token    Token // prefix token like -
 	Operator string
 	Right    Expression
+}
+
+func (pe *PrefixExpression) Value() float64 {
+	if pe.Operator == "-" {
+		return -1 * pe.Right.Value()
+	}
+	panic(fmt.Sprintf("prefix non minus value found : %s", pe.Operator))
 }
 
 func (pe *PrefixExpression) String() string {
@@ -47,16 +63,24 @@ func (pe *PrefixExpression) String() string {
 	return out.String()
 }
 
-func (pe *PrefixExpression) ExpressionNode() {}
-
 type Identifier struct {
 	Token Token //[token.IDENT] token
-	Value string
+	Val   string
 }
 
 func (i *Identifier) String() string {
-	return i.Value
+	return i.Val
 }
+
+func (pe *Identifier) Value() float64 {
+	val, ok := variables[pe.Val]
+	if !ok {
+		panic(fmt.Sprintf("variable %v not declared ", pe.Val))
+	}
+	return val
+}
+
+// func (pe *Identifier) Value() {}
 
 type InfixExpression struct {
 	Token    Token
@@ -75,20 +99,43 @@ func (ie *InfixExpression) String() string {
 	return out.String()
 }
 
-type ExpressionStatement struct {
-	Token      Token
-	Expression Expression
+func (ie *InfixExpression) Value() float64 {
+	switch ie.Operator {
+	case "+":
+		return ie.Left.Value() + ie.Right.Value()
+	case "-":
+		return ie.Left.Value() - ie.Right.Value()
+	case "*":
+		return ie.Left.Value() * ie.Right.Value()
+	case "/":
+		return ie.Left.Value() / ie.Right.Value()
+	case "=":
+		ident, ok := ie.Left.(*Identifier)
+		if !ok {
+			panic("assigning to non identifier ")
+		}
+		val := ie.Right.Value()
+		variables[ident.Val] = val
+		return val
+	default:
+		panic(fmt.Sprintf("Unknown operator %s", ie.Operator))
+	}
 }
 
-func (es *ExpressionStatement) String() string {
-	if es != nil {
-		return es.Expression.String()
-	}
-	return ""
+type PrintExpr struct {
+	Token Token
+	Val   Expression
 }
 
 type Program struct {
 	Expression []Expression
+}
+
+func (p *Program) Value() float64 {
+	if len(p.Expression) > 0 {
+		return p.Expression[len(p.Expression)-1].Value()
+	}
+	panic("Empty program")
 }
 
 func (p *Program) String() string {

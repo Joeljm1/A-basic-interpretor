@@ -61,6 +61,7 @@ func NewParser(inp string) *parser {
 	p.registerInfix(TokMinus, p.parseInfixExpression)
 	p.registerInfix(TokMul, p.parseInfixExpression)
 	p.registerInfix(TokDiv, p.parseInfixExpression)
+	p.registerInfix(TokEQ, p.parseInfixExpression)
 
 	p.NextTok()
 	p.NextTok() // twice to fill currTok and peekTok
@@ -138,7 +139,7 @@ func (p *parser) ParseFloatLiteral() Expression {
 func (p *parser) ParseIdentifier() Expression {
 	return &Identifier{
 		Token: p.currToken,
-		Value: p.currToken.Value,
+		Val:   p.currToken.Value,
 	}
 }
 
@@ -187,6 +188,9 @@ func (p *parser) ParseProgram() *Program {
 			program.Expression = append(program.Expression, expr)
 		}
 		p.NextTok()
+		if p.currTokIs(TokNewLine) {
+			p.NextTok()
+		}
 	}
 	return program
 }

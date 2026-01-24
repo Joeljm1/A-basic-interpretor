@@ -125,7 +125,7 @@ func (l *lexer) next() Token {
 	case '+':
 		l.readChar()
 		return NewTok(TokPlus, "+")
-	case '\n':
+	case '\n', ';':
 		l.readChar()
 		return NewTok(TokNewLine, "\n")
 	case 0:
