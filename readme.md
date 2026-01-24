@@ -6,6 +6,8 @@
 - Way slower than python (evaluation done in the ast itself)
 - Testing only one on the lexical analyzer so bugs may be present in the parser
 - Only global variables (they are overhated)
+- Everything is an expression (So it is a functional language)
+- Not turing complete (atleast for now)
 - No AI used (AI code would prolly be better quality)
 
 ## Suprising details I learned
