@@ -56,6 +56,7 @@ func NewParser(inp string) *parser {
 	p.registerPrefix(TokLPara, p.ParseGroupedExpr)
 	p.registerPrefix(TokInt, p.ParseIntegerLiteral)
 	p.registerPrefix(TokFloat, p.ParseFloatLiteral)
+	p.registerPrefix(TokPrint, p.parsePrintExpr)
 
 	p.registerInfix(TokPlus, p.parseInfixExpression)
 	p.registerInfix(TokMinus, p.parseInfixExpression)
@@ -178,6 +179,16 @@ func (p *parser) ParseExpr(precedance int) Expression {
 		left = p.parseInfixExpression(left)
 	}
 	return left
+}
+
+func (p *parser) parsePrintExpr() Expression {
+	pe := &PrintExpr{
+		Token: p.currToken,
+	}
+	p.NextTok()
+	pe.Val = p.ParseExpr(LOWEST)
+	fmt.Println(pe.Val.Value())
+	return pe
 }
 
 func (p *parser) ParseProgram() *Program {

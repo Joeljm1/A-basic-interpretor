@@ -127,6 +127,17 @@ type PrintExpr struct {
 	Val   Expression
 }
 
+func (pe *PrintExpr) Value() float64 {
+	return pe.Val.Value()
+}
+
+func (pe *PrintExpr) String() string {
+	var out bytes.Buffer
+	out.WriteString("print ")
+	out.WriteString(pe.Val.String())
+	return out.String()
+}
+
 type Program struct {
 	Expression []Expression
 }
