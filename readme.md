@@ -10,9 +10,6 @@
 - Not turing complete (atleast for now)
 - No AI used (AI code would prolly be better quality)
 
-## Suprising details I learned
-- Parsing was way easier when I stoped thinking about the language grammar (may be skill issue)
-
 ## To learn more about pratt parser
 
 https://journal.stuffwithstuff.com/2011/03/19/pratt-parsers-expression-parsing-made-easy/ (in java though 😩)
