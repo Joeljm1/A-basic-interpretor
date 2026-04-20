@@ -23,6 +23,7 @@ func main() {
 			p := NewParser(sc.Text())
 			pgm := p.ParseProgram()
 			fmt.Printf("%v\n", pgm.Value())
+			fmt.Printf("%v\n", pgm.String())
 		}()
 	}
 }

@@ -70,17 +70,11 @@ func NewParser(inp string) *parser {
 }
 
 func (p *parser) currTokIs(t TokenType) bool {
-	if p.currToken.Type == t {
-		return true
-	}
-	return false
+	return p.currToken.Type == t
 }
 
 func (p *parser) peekTokIs(t TokenType) bool {
-	if p.peekToken.Type == t {
-		return true
-	}
-	return false
+	return p.peekToken.Type == t
 }
 
 func (p *parser) expectPeekTok(t TokenType) bool {
